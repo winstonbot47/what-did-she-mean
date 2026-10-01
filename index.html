@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>what did she mean</title>
+<meta name="description" content="Paste the text. Add what happened before. Find out what she actually meant, how much trouble you are in, and what to send back." />
+<meta property="og:title" content="what did she mean" />
+<meta property="og:description" content="She said 'it's fine.' Was it fine? Decode the text, get the threat level, get the reply." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1e4a'/%3E%3Ctext x='32' y='42' font-size='32' text-anchor='middle'%3E%F0%9F%98%91%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg1:#0a1a44; --bg2:#122a6b; --bg3:#1a3a8a;
+    --card:rgba(255,255,255,.06); --card2:rgba(255,255,255,.10);
+    --line:rgba(255,255,255,.14);
+    --text:#eef2ff; --muted:#aab6e0;
+    --pill:#fff2cc; --pill-text:#2a2a2a;
+    --green:#49d27a; --yellow:#f3c74b; --orange:#ff9a3c; --red:#ff5a5a; --crimson:#c81e3a;
+    --accent:#ffd36b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    color:var(--text);
+    background:radial-gradient(1200px 700px at 20% -10%, #27479a 0%, transparent 60%),
+               radial-gradient(900px 600px at 110% 20%, #1d3f8f 0%, transparent 55%),
+               linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,var(--bg1) 100%);
+    min-height:100vh; line-height:1.5;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:28px 16px 60px}
+  header{text-align:center;margin:8px 0 22px}
+  h1{
+    font-family:Pacifico,cursive;font-weight:400;font-size:clamp(2.4rem,9vw,4rem);
+    margin:0;line-height:1.1;color:#fff;text-shadow:0 2px 24px rgba(255,255,255,.18)
+  }
+  h1 .pron{display:inline-block;min-width:1.6em}
+  .tag{color:var(--muted);font-size:.95rem;margin-top:8px}
+  .pronouns{display:inline-flex;gap:6px;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+  .pronouns button{background:transparent;border:0;color:var(--muted);font:inherit;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;min-height:36px}
+  .pronouns button.on{background:#fff;color:#1a2a5a}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;backdrop-filter:blur(6px)}
+  label{display:block;font-weight:600;font-size:.9rem;margin:10px 0 6px;color:#dfe6ff}
+  label small{font-weight:400;color:var(--muted)}
+  .pill, textarea, select{
+    width:100%;font:inherit;font-size:1rem;color:var(--pill-text);
+    background:var(--pill);border:0;border-radius:999px;padding:14px 18px;outline:none;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 6px 18px rgba(0,0,0,.18)
+  }
+  textarea{border-radius:22px;resize:vertical;min-height:72px}
+  select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#555 50%),linear-gradient(135deg,#555 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:520px){.row{grid-template-columns:1fr}}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font:inherit;font-weight:700;font-size:1.05rem;color:#1a2a5a;background:#fff;
+    border:0;border-radius:999px;padding:14px 26px;cursor:pointer;min-height:48px;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);transition:transform .08s ease
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:#fff;border:1px solid var(--line);box-shadow:none;font-weight:600;font-size:.95rem;padding:10px 16px;min-height:44px}
+  .btn.full{width:100%;margin-top:14px}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .examples button{background:var(--card2);border:1px solid var(--line);color:#fff;font:inherit;font-size:.85rem;border-radius:999px;padding:8px 12px;cursor:pointer;min-height:36px}
+
+  #result{display:none}
+  #result.show{display:block;animation:pop .35s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .verdict{
+    font-family:Pacifico,cursive;font-size:clamp(1.9rem,7vw,2.8rem);margin:0 0 4px;color:#fff;line-height:1.15
+  }
+  .decided{color:var(--muted);font-size:.8rem;margin-bottom:14px}
+  .meter{height:16px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid var(--line)}
+  .meter > i{display:block;height:100%;width:0;border-radius:999px;transition:width .9s cubic-bezier(.2,.8,.2,1);background:linear-gradient(90deg,var(--green),var(--yellow) 40%,var(--orange) 70%,var(--red))}
+  .meter-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;font-size:.9rem;color:var(--muted)}
+  .meter-row b{color:#fff;font-size:1.15rem}
+  .level{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.85rem;margin-left:8px;color:#111}
+  .trans{background:var(--card2);border-left:4px solid var(--accent);border-radius:14px;padding:12px 14px;margin:14px 0}
+  .trans .q{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+  .trans .a{font-size:1.1rem;font-weight:600}
+  h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 10px}
+  .interp{list-style:none;padding:0;margin:0}
+  .interp li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .interp li:last-child{border-bottom:0}
+  .interp .bar{grid-column:1/-1;height:7px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+  .interp .bar i{display:block;height:100%;width:0;background:var(--green);border-radius:999px;transition:width .8s ease}
+  .interp .pct{font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
+  .action{display:flex;gap:12px;align-items:center;background:#fff;color:#1a2a5a;border-radius:18px;padding:14px 16px;margin-top:8px}
+  .action .big{font-size:2rem;line-height:1}
+  .action b{display:block;font-size:1.05rem}
+  .action span{color:#4a5a8a;font-size:.9rem}
+  .replies{display:grid;gap:10px}
+  .reply{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+  .reply .k{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .reply .k b{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+  .reply .k button{background:transparent;border:1px solid var(--line);color:#fff;font:inherit;font-size:.8rem;border-radius:999px;padding:5px 10px;cursor:pointer;min-height:32px}
+  .reply .t{font-size:1rem}
+  .reply .why{color:var(--muted);font-size:.82rem;margin-top:4px}
+  .dont{display:flex;flex-wrap:wrap;gap:8px}
+  .dont span{background:rgba(255,90,90,.15);border:1px solid rgba(255,90,90,.4);color:#ffd0d0;border-radius:999px;padding:6px 12px;font-size:.85rem}
+  .share{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  footer{color:var(--muted);font-size:.78rem;text-align:center;margin-top:30px;line-height:1.6}
+  footer a{color:#dfe6ff}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#fff;color:#1a2a5a;padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  .corner{position:fixed;right:12px;bottom:10px;font-size:.7rem;color:rgba(255,255,255,.35)}
+  @media (max-width:520px){.corner{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>what did <span class="pron" id="pronTitle">she</span> mean</h1>
+    <div class="tag">Paste the text. Add what happened before. Get the real meaning, the threat level, and what to send back.</div>
+    <div class="pronouns" role="group" aria-label="Who texted you">
+      <button class="on" data-p="she">she</button>
+      <button data-p="he">he</button>
+      <button data-p="they">they</button>
+    </div>
+  </header>
+
+  <section class="card">
+    <label for="msg">The text(s) <small>exactly as sent, punctuation matters</small></label>
+    <textarea id="msg" placeholder="it's fine."></textarea>
+    <div class="examples" id="examples"></div>
+
+    <label for="ctx">What happened before <small>be honest, it can't help you if you lie to it</small></label>
+    <textarea id="ctx" placeholder="I said I'd be home by 7. It's 9:40. I'm still at the bar with the boys."></textarea>
+
+    <div class="row">
+      <div>
+        <label for="mine">Your last text <small>optional</small></label>
+        <input class="pill" id="mine" placeholder="running late, be there soon" />
+      </div>
+      <div>
+        <label for="wait">How long since you replied</label>
+        <select id="wait">
+          <option value="0">Just now</option>
+          <option value="1">Under 30 minutes</option>
+          <option value="2">An hour-ish</option>
+          <option value="3" selected>A few hours</option>
+          <option value="4">Since yesterday</option>
+          <option value="5">I never replied</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn full" id="go">Decode it</button>
+  </section>
+
+  <section class="card" id="result" aria-live="polite">
+    <div class="verdict" id="verdict">reading it…</div>
+    <div class="decided" id="decided"></div>
+
+    <div class="meter"><i id="meterFill"></i></div>
+    <div class="meter-row"><span>Threat level</span><span><b id="threat">0</b>/100 <span class="level" id="levelTag"></span></span></div>
+
+    <div class="trans">
+      <div class="q">Translation</div>
+      <div class="a" id="translation"></div>
+    </div>
+
+    <h3>What it could mean</h3>
+    <ul class="interp" id="interp"></ul>
+
+    <h3>Recommended action</h3>
+    <div class="action"><div class="big" id="actIcon">📱</div><div><b id="actTitle"></b><span id="actSub"></span></div></div>
+
+    <h3>How to respond</h3>
+    <div class="replies" id="replies"></div>
+
+    <h3>Do not send</h3>
+    <div class="dont" id="dont"></div>
+
+    <div class="share">
+      <button class="btn ghost" id="copyBtn">Copy the verdict</button>
+      <button class="btn ghost" id="shareBtn">Send to a buddy</button>
+      <button class="btn ghost" id="againBtn">Decode another</button>
+    </div>
+  </section>
+
+  <footer>
+    For entertainment only. Not a substitute for actually talking to <span class="pronObj">her</span>.<br />
+    We are not responsible for anything that happens after you press Decode. Nothing you type leaves your phone.
+  </footer>
+</div>
+<div class="toast" id="toast">Copied</div>
+<div class="corner">staging · this device</div>
+
+<script>
+(function(){
+  // ---------- pronouns ----------
+  const P = {
+    she:{sub:'she', obj:'her', pos:'her', cap:'She'},
+    he:{sub:'he', obj:'him', pos:'his', cap:'He'},
+    they:{sub:'they', obj:'them', pos:'their', cap:'They'}
+  };
+  let pron = P.she;
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  function setPron(k){
+    pron = P[k];
+    $('#pronTitle').textContent = pron.sub;
+    $$('.pronObj').forEach(e=>e.textContent=pron.obj);
+    $$('.pronouns button').forEach(b=>b.classList.toggle('on', b.dataset.p===k));
+    document.title = 'what did '+pron.sub+' mean';
+  }
+  $$('.pronouns button').forEach(b=>b.addEventListener('click',()=>setPron(b.dataset.p)));
+
+  // ---------- examples ----------
+  const EX = [
+    "it's fine.", "k", "do whatever you want", "I'm not mad", "we need to talk", "have fun 👍", "ok.", "I'm going out with my friends", "must be nice", "sure", "goodnight.", "wow", "nothing", "never mind", "noted", "love you ❤️"
+  ];
+  const exWrap = $('#examples');
+  EX.forEach(t=>{ const b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=()=>{ $('#msg').value=t; $('#msg').focus(); }; exWrap.appendChild(b); });
+
+  // ---------- the engine ----------
+  // Each rule: regex, base threat (0-100), meaning template, extra interpretations with weights.
+  const RULES = [
+    {re:/\b(it'?s|its|i'?m|im|that'?s|thats|everything'?s|all)\s+fine\b/i, base:62, mean:"It is not fine. {Cap} is cataloguing the ways it is not fine while you read this.", interp:[["It is not fine",1],["{Cap} wants you to notice without being told",.85],["An apology would fix it",.7],["{Cap} is actually fine",.15]]},
+    {re:/^\s*fine\.?\s*$/i, base:70, mean:"One word. That word is a door closing.", interp:[["{Cap} is done discussing it",1],["{Cap} is upset with you specifically",.8],["{Cap} is actually fine",.1]]},
+    {re:/^\s*(k|kk|kay)\.?\s*$/i, base:78, mean:"'K' is the shortest possible way to say you are in trouble.", interp:[["{Cap} is furious and conserving letters",1],["{Cap} expected more from you and got less",.8],["{Cap} is busy",.2]]},
+    {re:/^\s*(ok|okay|alright)\.?\s*$/i, base:52, mean:"'Ok' with nothing after it means the conversation is not over, it is paused.", interp:[["{Cap} is waiting to see what you do next",1],["{Cap} is disappointed but not surprised",.7],["{Cap} is actually ok",.3]]},
+    {re:/\b(ok|okay)\s*cool\b/i, base:58, mean:"'Ok cool' is 'ok' with a layer of ice on top.", interp:[["It is not cool",1],["{Cap} is logging this for later",.75]]},
+    {re:/\b(do|go)\s+whatever\s+(you\s+want|u\s+want)\b|\bwhatever\b/i, base:84, mean:"Do not do whatever you want. Do the opposite of whatever you were about to do.", interp:[["{Cap} wants you to choose {obj} without being asked to",1],["This is a test and you are failing it",.9],["{Cap} genuinely does not care",.08]]},
+    {re:/\b(i'?m|im)\s+not\s+(mad|angry|upset)\b/i, base:80, mean:"{Cap} is mad. {Cap} is so mad {sub} needs you to know {sub} is not mad.", interp:[["{Cap} is mad",1],["{Cap} wants you to ask what is actually wrong",.85],["{Cap} is not mad",.05]]},
+    {re:/\bwe\s+need\s+to\s+talk\b/i, base:92, mean:"A meeting has been scheduled. You are not the chair.", interp:[["Something specific happened and {sub} knows about it",1],["You forgot something important",.8],["It is good news",.03]]},
+    {re:/\bhave\s+fun\b/i, base:66, mean:"'Have fun' means your fun is now being measured against {pos} evening.", interp:[["{Cap} wanted you home instead",1],["{Cap} is keeping score",.8],["{Cap} genuinely hopes you have fun",.25]]},
+    {re:/\b(going\s+out|heading\s+out|out)\s+with\s+(my\s+)?(friends|the\s+girls|the\s+guys)\b/i, base:55, mean:"{Cap} is informing you, not asking you. Noted.", interp:[["{Cap} made plans because you did not",1],["{Cap} wants you to say 'have fun' and mean it",.7],["{Cap} is just telling you {pos} plans",.4]]},
+    {re:/\bmust\s+be\s+nice\b/i, base:88, mean:"It is not nice. It is the opposite of nice. {Cap} is comparing your day to {pos} day and you lost.", interp:[["{Cap} did all the work today",1],["You posted something you should not have",.7],["{Cap} is happy for you",.02]]},
+    {re:/^\s*sure\.?\s*$/i, base:60, mean:"'Sure' is a yes with a receipt attached.", interp:[["{Cap} agreed and will bring it up later",1],["{Cap} is choosing peace, for now",.6],["{Cap} means sure",.3]]},
+    {re:/\b(good\s*night|night|gn)\b/i, base:40, mean:"{Cap} is going to sleep. Whether {sub} is going to sleep angry is in the punctuation.", interp:[["Conversation closed until morning",1],["{Cap} wanted a call, not a text",.5],["{Cap} is just tired",.6]]},
+    {re:/^\s*wow\.?\s*$/i, base:86, mean:"'Wow' means you said the thing out loud. {Cap} cannot believe you said the thing.", interp:[["You said something you cannot take back",1],["{Cap} is screenshotting this for {pos} friends",.8],["{Cap} is impressed",.03]]},
+    {re:/^\s*nothing\.?\s*$/i, base:76, mean:"It is not nothing. It is something, and {sub} wants you to figure out what.", interp:[["It is something",1],["You should already know what it is",.9],["It is nothing",.05]]},
+    {re:/\b(never\s*mind|nvm|forget\s+it|don'?t\s+worry\s+about\s+it)\b/i, base:82, mean:"{Cap} has stopped asking. That is worse than asking.", interp:[["{Cap} will do it {obj}self and remember that {sub} had to",1],["{Cap} asked twice already",.85],["It really did not matter",.08]]},
+    {re:/^\s*noted\.?\s*$/i, base:72, mean:"'Noted' means it has been written down. There is a file now.", interp:[["It went in the file",1],["{Cap} will not be bringing it up, {sub} will be remembering it",.8]]},
+    {re:/\b(if\s+you\s+want|you\s+decide|i\s+don'?t\s+care|up\s+to\s+you)\b/i, base:74, mean:"{Cap} cares. {Cap} wants you to care enough to decide correctly.", interp:[["There is a correct answer and you are expected to know it",1],["{Cap} is tired of planning everything",.8],["{Cap} genuinely does not mind",.12]]},
+    {re:/\b(i'?ll|ill)\s+(just\s+)?do\s+it\s+myself\b/i, base:90, mean:"The task has been reassigned. So has some of your standing.", interp:[["You said you would and you did not",1],["{Cap} is done waiting",.9]]},
+    {re:/\b(where\s+are\s+you|are\s+you\s+coming|what\s+time|did\s+you\s+forget|hello\??|\?\?\?+)/i, base:68, mean:"{Cap} has been waiting and {sub} has started counting.", interp:[["You are late and it is being noticed",1],["You forgot something with a time attached",.8],["{Cap} just wants an ETA",.4]]},
+    {re:/\b(good\s+for\s+you|congrats|congratulations)\b/i, base:58, mean:"Congratulations. Now read it in {pos} voice.", interp:[["It is sincere",.5],["It is not sincere",.6],["{Cap} wanted to be included",.7]]},
+    {re:/\b(yep|yup|yeah)\.?\s*$/i, base:44, mean:"Agreement, minimal. The period decides the rest.", interp:[["{Cap} is fine but short on patience",.7],["{Cap} is busy",.6],["{Cap} is annoyed",.5]]},
+    {re:/\bsounds\s+good\b/i, base:22, mean:"Probably actually sounds good. Do not overthink it. Do not underthink it either.", interp:[["It sounds good",1],["{Cap} is being polite",.3]]},
+    {re:/\b(no\s+worries|all\s+good|it'?s\s+all\s+good|i'?m\s+good)\b/i, base:38, mean:"'No worries' is roughly 30% worries.", interp:[["Mostly fine",.8],["Slightly not fine",.5]]},
+    {re:/\b(love\s+you|love\s+u|luv\s+u|miss\s+you|miss\s+u)\b/i, base:8, mean:"{Cap} loves you. Say it back and do not get cute.", interp:[["{Cap} loves you",1],["{Cap} wants to hear it back",.8],["{Cap} needs a favor",.15]]},
+    {re:/\b(thanks|thank\s+you|thx|ty)\b/i, base:30, mean:"Gratitude, possibly. 'Thanks.' with a period is a different word.", interp:[["{Cap} means it",.7],["{Cap} is being formal, which is bad",.4]]},
+    {re:/\b(call\s+me|can\s+you\s+call)\b/i, base:64, mean:"{Cap} does not want to type it. That means it is big.", interp:[["It is too much for text",1],["Someone is in the hospital or you are",.3],["{Cap} just misses your voice",.35]]},
+    {re:/\b(i\s+guess|whatever\s+works)\b/i, base:63, mean:"'I guess' is a no that got tired.", interp:[["{Cap} does not like the plan",1],["{Cap} is giving up on the plan",.7]]}
+  ];
+
+  // Context signals (what happened before / your last text)
+  const CTX = [
+    {re:/\b(forgot|forget|missed)\b/i, add:14, why:"forgetting it"},
+    {re:/\b(late|running late|still here|another round|one more)\b/i, add:12, why:"being late"},
+    {re:/\b(anniversary)\b/i, add:28, why:"the anniversary"},
+    {re:/\b(birthday)\b/i, add:22, why:"the birthday"},
+    {re:/\b(her mom|her mother|your mom|my mom|mother[- ]in[- ]law|his mom)\b/i, add:12, why:"the mom thing"},
+    {re:/\b(the boys|the guys|poker|golf|fishing|hunting|the bar|bar|brewery|the game|game night|fantasy)\b/i, add:10, why:"the boys thing"},
+    {re:/\b(dishes|trash|garbage|laundry|lawn|yard|chores|didn'?t clean|mess)\b/i, add:10, why:"the chores"},
+    {re:/\b(ex|old flame|dm'?d|liked her|liked a|instagram|insta|tiktok|snap)\b/i, add:20, why:"the phone thing"},
+    {re:/\b(her friend|friend'?s husband|friends husband|other husbands)\b/i, add:9, why:"the comparison"},
+    {re:/\b(money|spent|bought|credit card|amazon|new (truck|car|boat|gun|golf|tv))\b/i, add:16, why:"the purchase"},
+    {re:/\b(didn'?t text|didn'?t call|no reply|didn'?t answer|phone died|on silent)\b/i, add:14, why:"going dark"},
+    {re:/\b(kids|the kids|school|pickup|pick up|daycare)\b/i, add:12, why:"the kids thing"},
+    {re:/\b(work|meeting|deadline|boss)\b/i, add:4, why:"work"},
+    {re:/\b(sorry|apolog|flowers|dinner|date night|surprise|booked|planned)\b/i, add:-14, why:null},
+    {re:/\b(fight|argu|yelled|slammed)\b/i, add:16, why:"the fight"}
+  ];
+
+  function analyze(msg, ctx, mine, waitIdx){
+    const t0 = performance.now();
+    const text = (msg||'').trim();
+    const lower = text.toLowerCase();
+    const all = [text, ctx||'', mine||''].join(' \n ');
+    let score = 35; // baseline: a text exists and you are asking a website about it
+    let hits = [];
+    let interp = [];
+    let meaning = null;
+    let bestBase = -1;
+
+    // phrase rules
+    RULES.forEach(r=>{
+      if(r.re.test(text)){
+        hits.push(r);
+        if(r.base>bestBase){bestBase=r.base; meaning=r.mean;}
+        r.interp.forEach(([label,w])=>interp.push([label,w*r.base]));
+      }
+    });
+    if(hits.length){ score = bestBase + Math.min(12,(hits.length-1)*6); }
+    else if(text.length){
+      meaning = text.length<=12 ? "Short, unmatched, and sent on purpose. Assume there is subtext." : "No known phrase matched. That means {sub} wrote it in {pos} own words, which is either very good or very bad.";
+      interp.push(["There is subtext you are not seeing", 48],["{Cap} is actually fine", 30],["{Cap} wants a real reply, not a 'lol'", 40]);
+    }
+
+    // punctuation and style modifiers
+    const mods = [];
+    if(/[a-z0-9]\.\s*$/i.test(text) && !/\.\.\./.test(text)){ score+=10; mods.push("ends with a period"); }
+    if(/\.\.\.|…/.test(text)){ score+=8; mods.push("trailing dots"); }
+    if(/!{2,}/.test(text)){ score+=6; mods.push("multiple exclamation points"); }
+    if(/\?{2,}/.test(text)){ score+=8; mods.push("multiple question marks"); }
+    if(text.length>3 && text===text.toUpperCase() && /[A-Z]/.test(text)){ score+=14; mods.push("ALL CAPS"); }
+    if(/👍/.test(text)){ score+=12; mods.push("thumbs up"); }
+    if(/🙂|😊/.test(text)){ score+=9; mods.push("the polite smile"); }
+    if(/😑|😐|🙄|😒/.test(text)){ score+=15; mods.push("that face"); }
+    if(/❤️|♥|😘|🥰|😍|💕|💗/.test(text)){ score-=22; mods.push("a heart"); }
+    if(/😂|🤣|😆/.test(text)){ score-=14; mods.push("laughing"); }
+    if(/\b(lol|haha|lmao|jk)\b/i.test(text)){ score-=10; mods.push("lol"); }
+    if(/\bbabe|baby|honey|hon\b/i.test(text)){ score-=8; mods.push("a pet name"); }
+    if(/\b(sir|mister|mr\.|first name)\b/i.test(text)){ score+=10; }
+    const words = text.split(/\s+/).filter(Boolean).length;
+    if(words===1 && hits.length===0){ score+=8; mods.push("one word"); }
+    if(words>=25){ score-=4; }
+
+    // context
+    let whys = [];
+    CTX.forEach(c=>{ if(c.re.test(all)){ score+=c.add; if(c.why) whys.push(c.why); } });
+
+    // wait time
+    const waitAdd = [0,2,6,10,16,24][waitIdx||0];
+    score += waitAdd;
+
+    score = Math.max(2, Math.min(99, Math.round(score)));
+
+    // interpretations: normalize to the score, keep top 7, dedupe
+    const seen = new Set();
+    interp = interp.filter(([l])=>{ if(seen.has(l)) return false; seen.add(l); return true; });
+    const maxW = Math.max(...interp.map(i=>i[1]), 1);
+    let list = interp.map(([l,w])=>{
+      let pct = Math.round((w/maxW)*score);
+      if(/actually (fine|ok)|genuinely|sincere|means sure|loves you|it sounds good|really did not matter|good news|impressed|nothing$/i.test(l)){ pct = Math.max(2, Math.round(100-score)*(w/maxW)); }
+      return [l, Math.max(2,Math.min(99,pct))];
+    }).sort((a,b)=>b[1]-a[1]).slice(0,7);
+
+    const ms = Math.max(48, Math.round(performance.now()-t0)+48);
+    return {score, meaning: meaning||"", list, mods, whys, ms, text};
+  }
+
+  function fill(s){
+    return s.replace(/\{Cap\}/g,pron.cap).replace(/\{sub\}/g,pron.sub).replace(/\{obj\}/g,pron.obj).replace(/\{pos\}/g,pron.pos);
+  }
+
+  function tier(score){
+    if(score<25) return {name:"Actually fine", color:"var(--green)", verdict:"{sub} is fine", icon:"😌"};
+    if(score<45) return {name:"Proceed with caution", color:"var(--yellow)", verdict:"{sub} is mostly fine", icon:"🧐"};
+    if(score<65) return {name:"Not fine", color:"var(--orange)", verdict:"{sub} is not fine", icon:"😬"};
+    if(score<85) return {name:"Code red", color:"var(--red)", verdict:"{sub} is NOT fine", icon:"🚨"};
+    return {name:"DEFCON 1", color:"var(--crimson)", verdict:"go home. now.", icon:"🍕💐"};
+  }
+
+  function plan(score, whys){
+    const why = whys.length ? whys[0] : "whatever I did";
+    const sorryFor = whys.length ? whys.slice(0,2).join(" and ") : "it";
+    const tiers = [
+      { // fine
+        act:["📱","Text back, normally","Match the energy. Do not escalate a non-event into an event."],
+        replies:[
+          ["Safe", "Sounds good, text me when you're home ❤️", "Warm, short, nothing to decode."],
+          ["Bold", "Have fun. I'm making your favorite tomorrow, no reason.", "A small deposit in the account for later."],
+          ["Grovel", "Not needed. Put the flowers down.", "You are fine. Do not apologize for nothing, it creates a nothing."]
+        ],
+        dont:["k","👍","a meme","'you ok?'"]
+      },
+      { // caution
+        act:["📱","Text back, with a question","Check in without accusing. Ask one real question and wait."],
+        replies:[
+          ["Safe", "You sure? Feels like something's up. I'm here when you're back.", "Opens the door without kicking it in."],
+          ["Bold", "I feel like 'ok' is doing a lot of work in that text. Talk tonight?", "Names the subtext. Risky but respected."],
+          ["Grovel", "If I did something, tell me and I'll fix it. I'd rather know.", "Only if you suspect you did something."]
+        ],
+        dont:["ok","lol","'relax'","a thumbs up","'what's wrong now'"]
+      },
+      { // not fine
+        act:["☎️","Call "+pron.obj,"This is past texting. Call within the hour. Open with the apology, not the explanation."],
+        replies:[
+          ["Safe", "Hey. I can tell it's not fine, and I'm sorry about "+sorryFor+". Can I call you?", "Acknowledges it, apologizes once, asks permission to talk."],
+          ["Bold", "I'm not going to text about "+why+". Calling you in 2 minutes.", "Shows you take it seriously. Then actually call."],
+          ["Grovel", "You're right. I handled "+why+" badly and I should've thought about you first. I'm sorry.", "Use when you already know you are wrong."]
+        ],
+        dont:["'it's fine' back","'I said sorry'","'calm down'","any sentence starting with 'but'","'you always'"]
+      },
+      { // code red
+        act:["🚗","Go home","Stop typing. Leave where you are. Buy something on the way that shows you were thinking about "+pron.obj+"."],
+        replies:[
+          ["Safe", "Leaving now. I messed up with "+why+" and I'd rather say it in person.", "Action first, words second."],
+          ["Bold", "On my way. Pizza or Thai?", "Works only if you are actually on your way."],
+          ["Grovel", "I'm sorry. No excuses. I'm coming home and I'm listening.", "Short. No explanation. Explanations are for later, if invited."]
+        ],
+        dont:["a paragraph","'I was just'","'you're overreacting'","a voice memo","'lol my bad'"]
+      },
+      { // defcon
+        act:["🍕💐","Pizza and flowers","You are past the point of a good text. Show up with both, say less than you want to, and let "+pron.obj+" talk first."],
+        replies:[
+          ["Safe", "I'm on my way home. I'm sorry.", "Six words. That is the maximum."],
+          ["Bold", "Do not be bold right now.", "Bold is what got you here."],
+          ["Grovel", "You deserved better than "+why+" and you got me instead. I'm coming home to fix it.", "Deliver in person. Not over text."]
+        ],
+        dont:["anything with an emoji","'can we talk about this tomorrow'","a 'k' back","'I thought you said it was fine'","nothing at all"]
+      }
+    ];
+    const i = score<25?0:score<45?1:score<65?2:score<85?3:4;
+    return tiers[i];
+  }
+
+  // ---------- render ----------
+  let last = null;
+  function run(){
+    const btn = $('#go'); btn.disabled = true; btn.textContent = "reading it…";
+    const msg = $('#msg').value, ctx = $('#ctx').value, mine = $('#mine').value, wait = +$('#wait').value;
+    if(!msg.trim()){ $('#msg').focus(); btn.disabled=false; btn.textContent="Decode it"; return; }
+    setTimeout(()=>{
+      const r = analyze(msg, ctx, mine, wait);
+      const t = tier(r.score);
+      const p = plan(r.score, r.whys);
+      last = {r,t,p};
+      $('#verdict').textContent = fill(t.verdict);
+      $('#decided').textContent = "decided in "+r.ms+"ms by the algorithm"+(r.mods.length?" · noticed: "+r.mods.join(", "):"")+(r.whys.length?" · factoring in: "+r.whys.join(", "):"");
+      $('#threat').textContent = r.score;
+      const tag = $('#levelTag'); tag.textContent = t.name; tag.style.background = t.color;
+      $('#meterFill').style.width = '0%';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ $('#meterFill').style.width = r.score+'%'; }));
+      $('#translation').textContent = fill(r.meaning);
+      const ul = $('#interp'); ul.innerHTML = '';
+      r.list.forEach(([l,pct])=>{
+        const li = document.createElement('li');
+        li.innerHTML = '<span>'+fill(l)+'</span><span class="pct">'+pct+'%</span><div class="bar"><i></i></div>';
+        ul.appendChild(li);
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{ li.querySelector('i').style.width = pct+'%'; }));
+      });
+      $('#actIcon').textContent = p.act[0]; $('#actTitle').textContent = p.act[1]; $('#actSub').textContent = p.act[2];
+      const rp = $('#replies'); rp.innerHTML = '';
+      p.replies.forEach(([k,txt,why])=>{
+        const d = document.createElement('div'); d.className='reply';
+        d.innerHTML = '<div class="k"><b>'+k+'</b><button type="button">Copy</button></div><div class="t"></div><div class="why"></div>';
+        d.querySelector('.t').textContent = txt; d.querySelector('.why').textContent = why;
+        d.querySelector('button').onclick = ()=>copy(txt, "Reply copied");
+        rp.appendChild(d);
+      });
+      const dn = $('#dont'); dn.innerHTML=''; p.dont.forEach(x=>{ const s=document.createElement('span'); s.textContent=x; dn.appendChild(s); });
+      const res = $('#result'); res.classList.add('show');
+      res.scrollIntoView({behavior:'smooth', block:'start'});
+      btn.disabled=false; btn.textContent="Decode it";
+      try{ location.hash = encodeURIComponent(JSON.stringify({m:msg,c:ctx,y:mine,w:wait,p:pron.sub})); }catch(e){}
+    }, 420);
+  }
+  $('#go').addEventListener('click', run);
+  $('#msg').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); run(); } });
+
+  function summary(){
+    if(!last) return '';
+    const {r,t,p} = last;
+    return 'what did '+pron.sub+' mean\n"'+r.text+'"\nVerdict: '+fill(t.verdict)+' (threat '+r.score+'/100, '+t.name+')\nTranslation: '+fill(r.meaning)+'\nAction: '+p.act[1]+'\nSafe reply: '+p.replies[0][1]+'\n'+location.href;
+  }
+  function copy(txt, label){
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(()=>toast(label||"Copied")).catch(()=>{
+      const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast(label||"Copied");}catch(e){} ta.remove();
+    });
+  }
+  function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1400); }
+  $('#copyBtn').onclick = ()=>copy(summary(), "Verdict copied");
+  $('#shareBtn').onclick = ()=>{
+    const s = summary();
+    if(navigator.share){ navigator.share({title:'what did '+pron.sub+' mean', text:s}).catch(()=>{}); }
+    else copy(s, "Copied, paste it to him");
+  };
+  $('#againBtn').onclick = ()=>{ $('#result').classList.remove('show'); $('#msg').value=''; $('#ctx').value=''; $('#mine').value=''; window.scrollTo({top:0,behavior:'smooth'}); $('#msg').focus(); };
+
+  // restore from a shared link
+  try{
+    if(location.hash.length>1){
+      const s = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+      if(s.p && P[s.p]) setPron(s.p);
+      $('#msg').value = s.m||''; $('#ctx').value = s.c||''; $('#mine').value = s.y||''; $('#wait').value = s.w||0;
+      if(s.m) run();
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
