@@ -119,7 +119,6 @@
     <div class="pronouns" role="group" aria-label="Who texted you">
       <button class="on" data-p="she">she</button>
       <button data-p="he">he</button>
-      <button data-p="they">they</button>
     </div>
   </header>
 
@@ -196,8 +195,7 @@
   // ---------- pronouns ----------
   const P = {
     she:{sub:'she', obj:'her', pos:'her', cap:'She'},
-    he:{sub:'he', obj:'him', pos:'his', cap:'He'},
-    they:{sub:'they', obj:'them', pos:'their', cap:'They'}
+    he:{sub:'he', obj:'him', pos:'his', cap:'He'}
   };
   let pron = P.she;
   const $ = s => document.querySelector(s);
